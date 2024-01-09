@@ -381,7 +381,7 @@ Add-BuildTask CreateMarkdownHelp -After CreateHelpStart {
     }
 
     Write-Build Gray '           Checking for missing documentation in md files...'
-    $MissingDocumentation = Select-String -Path "$script:ArtifactsPath\docs\*.md" -Pattern "({{.*}})"|?{$_ -notlike "*ProgressAction*"}
+    $MissingDocumentation = Select-String -Path "$script:ArtifactsPath\docs\*.md" -Pattern "({{.*}})"|Where-Object{$_ -notlike "*ProgressAction*"}
     if ($MissingDocumentation.Count -gt 0) {
         Write-Build Yellow '             The documentation that got generated resulted in missing sections which should be filled out.'
         Write-Build Yellow '             Please review the following sections in your comment based help, fill out missing information and rerun this build:'
