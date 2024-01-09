@@ -55,7 +55,8 @@ function Install-EventLog {
                 if ($ContinueOnNewSources -and $overlap) {
                     Write-Verbose "$prefixVerbose Skipping existing event sources"
                     $Sources = ($compare|Where-Object{$_.SideIndicator -eq "=>"}).InputObject
-                } elseif ($overlap) {
+                }
+                elseif ($overlap) {
                     Write-Verbose "$prefixVerbose Found existing event sources, throwing error"
                     throw "$prefixError $($overlap.count) Log Sources already exist in the $LogName log"
                 }
@@ -67,12 +68,12 @@ function Install-EventLog {
                 New-EventLog -LogName $LogName -Source $source -ErrorAction Stop
 
                 $log = @{
-                    LogName = $LogName
+                    LogName   = $LogName
                     EntryType = "Information"
-                    Source = $source
-                    Category = 0
-                    EventId = 1
-                    Message = "$prefixInfo Implementing $LogName with source $source"
+                    Source    = $source
+                    Category  = 0
+                    EventId   = 1
+                    Message   = "$prefixInfo Implementing $LogName with source $source"
                 }
                 Write-Verbose "$prefixVerbose Writing '$source' event log entry"
                 Write-EventLog @log
