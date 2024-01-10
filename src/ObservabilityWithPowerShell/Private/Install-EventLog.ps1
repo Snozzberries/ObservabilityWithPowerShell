@@ -24,7 +24,7 @@ function Install-EventLog {
         [string]$LogName="ObservabilityWithPowerShell",
         [string[]]$Sources=@("Observability"),
         [string]$OverflowAction="OverwriteAsNeeded",
-        [Int32]$Size=20MB,
+        [int]$Size=20MB,
         [bool]$ContinueOnNewSources=$true
     )
     begin {
@@ -56,7 +56,8 @@ function Install-EventLog {
                     Write-Verbose "$prefixVerbose Skipping existing event sources"
                     $Sources = ($compare|Where-Object{$_.SideIndicator -eq "=>"}).InputObject
                 }
-                elseif ($overlap) {
+
+                if ($overlap -and $Sources.Count -eq 0) {
                     Write-Verbose "$prefixVerbose Found existing event sources, throwing error"
                     throw "$prefixError $($overlap.count) Log Sources already exist in the $LogName log"
                 }
