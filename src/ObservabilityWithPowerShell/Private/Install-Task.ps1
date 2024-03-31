@@ -38,6 +38,7 @@ function Install-Task {
     }
     process {
         try {
+            #foreach command foreach object returned write event log
             $command = Get-Command powershell.exe
             $at = (Get-Date).AddSeconds(10)
             $actions = New-ScheduledTaskAction -Execute $command.Source -Argument "-Command `"& {Write-EventLog -LogName 'Sentinel' -EntryType Information -Source '$source' -Category 0 -EventId 10 -Message (Get-SmbOpenFile|ConvertTo-Json)}`""

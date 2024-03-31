@@ -21,24 +21,29 @@
 function Install-ObsAdds {
     [CmdletBinding()]
     param (
-        [string]$FolderName="ObservabilityWithPowerShell",
-        [string]$LogName="ObservabilityWithPowerShell",
         [string]$Source="Observability"
     )
     begin {
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
-        $prefixInfo = "[Info][$($MyInvocation.MyCommand.Name)]"
-
-        $log = @{
-            LogName   = $LogName
-            EntryType = "Information"
-            Source    = $source
-            Category  = 0
-        }
     }
     process {
         try {
-            
+            Write-Verbose "$prefixVerbose Obtaining commands from module"
+            $commands = Get-Command -Module ObservabilityWithPowerShell
+            Write-Verbose "$prefixVerbose Obtaining scheduled tasks"
+            $tasks = Get-ScheduledTask -TaskPath "\$Source"
+            foreach($command in $commands){
+                if($command.Name -notmatch "Get-ObsAdds[0-9]+"){
+                    Write-Verbose "$prefixVerbose Command does not match pattern, skipping $($command.Name)"
+                    continue
+                }
+                if($command.Name -in $tasks.TaskName){
+                    Write-Verbose "$prefixVerbose Command already exists as task, skipping $($command.Name)"
+                    continue
+                }
+                Write-Verbose "$prefixVerbose Installing $($command.Name)"
+                Install-Task
+            }
         }
         catch {
             throw $_
