@@ -23,31 +23,43 @@ function Install-Task {
     param (
         [string]$FolderName="ObservabilityWithPowerShell",
         [string]$LogName="ObservabilityWithPowerShell",
-        [string]$Source="Observability"
+        [string]$Source="Observability",
+        [string]$gMSA="$((Get-ADDomain).NetBIOSName)\$source`$",
+        [string]$Command
     )
     begin {
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
-        $prefixInfo = "[Info][$($MyInvocation.MyCommand.Name)]"
-
-        $log = @{
-            LogName   = $LogName
-            EntryType = "Information"
-            Source    = $source
-            Category  = 0
-        }
     }
     process {
         try {
-            #foreach command foreach object returned write event log
-            $command = Get-Command powershell.exe
+            Write-Verbose "$prefixVerbose Attempting match for $command"
+            $match = $Command -match "[0-9]+$"
+            if(-not $match){
+                Write-Verbose "$prefixVerbose Match failed"
+                throw "$prefixError Unable to identify an event ID using $command"
+            }
+            $eventId = $Matches.0
+            $writeEvent = "Write-EventLog -LogName '$LogName' -EntryType Information -Source '$Source' -Category 0 -EventId $eventId -Message"
+            Write-Verbose "$prefixVerbose Created $script"
+            $script = "$command|ForEach-Object{$writeEvent (`$_|ConvertTo-Json -Compress)}"
+
+            $binary = Get-Command powershell.exe
+            $actionSplat = @{
+                Execute  = $binary.Source
+                Argument = "-Command `"& {$script}`""
+            }
+            $actions = New-ScheduledTaskAction @actionSplat
             $at = (Get-Date).AddSeconds(10)
-            $actions = New-ScheduledTaskAction -Execute $command.Source -Argument "-Command `"& {Write-EventLog -LogName 'Sentinel' -EntryType Information -Source '$source' -Category 0 -EventId 10 -Message (Get-SmbOpenFile|ConvertTo-Json)}`""
+            Write-Verbose "$prefixVerbose Set first run $at"
             $trigger = New-ScheduledTaskTrigger -Daily -At $at
-            $trigger.Repetition = (New-ScheduledTaskTrigger -Once -At $at -RepetitionDuration (New-TimeSpan -Hours 23) -RepetitionInterval (New-TimeSpan -Hours 1)).Repetition
-            $principal = New-ScheduledTaskPrincipal -UserId "TEST\Sentinel$" -RunLevel Highest -LogonType Password
+            $repeate = New-ScheduledTaskTrigger -Once -At $at -RepetitionDuration (New-TimeSpan -Hours 23) -RepetitionInterval (New-TimeSpan -Hours 1)
+            $trigger.Repetition = $repeate.Repetition
+            Write-Verbose "$prefixVerbose Setting run as principal to $gMSA"
+            $principal = New-ScheduledTaskPrincipal -UserId "$gMSA" -RunLevel Highest -LogonType Password
             $settings = New-ScheduledTaskSettingsSet -RunOnlyIfNetworkAvailable -WakeToRun -ExecutionTimeLimit (New-TimeSpan -Minutes 15)
             $task = New-ScheduledTask -Action $actions -Principal $principal -Trigger $trigger -Settings $settings
-            Register-ScheduledTask "Get-SMBConnection" -TaskPath "\Sentinel" -InputObject $task
+            Write-Verbose "$prefixVerbose Registering scheduled task as $Command"
+            Register-ScheduledTask "$Command" -TaskPath "\$FolderName" -InputObject $task
         }
         catch {
             throw $_
