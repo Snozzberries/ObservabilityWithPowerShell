@@ -21,25 +21,47 @@
 function Install-gMsa {
     [CmdletBinding()]
     param (
-        [string]$Source="Observability"
+        [string]$Identity = "Observability",
+        [string[]]$Principals = @((Get-ADComputer $env:COMPUTERNAME))
     )
     begin {
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
         $prefixInfo = "[Info][$($MyInvocation.MyCommand.Name)]"
-
-        $log = @{
-            LogName   = $LogName
-            EntryType = "Information"
-            Source    = $source
-            Category  = 0
-        }
+        $prefixError = "[Error][$($MyInvocation.MyCommand.Name)]"
     }
     process {
         try {
-            Add-KdsRootKey -EffectiveTime ((get-date).addhours(-10))
-            #Make sure AD WS is enabled and 9389 is allowed
-            New-ADServiceAccount -Name "$Source" -PrincipalsAllowedToRetrieveManagedPassword (Get-ADComputer $env:COMPUTERNAME) -SamAccountName "$Source"
-            Test-ADServiceAccount -Identity Observability
+            Install-KdsRootKey
+
+            Write-Verbose "$prefixVerbose Requesting all service accounts with -Identity $Identity"
+            $serviceAccounts = Get-ADServiceAccount -Identity $Identity
+            $validGmsa = $false
+            foreach($serviceAccount in $serviceAccounts){
+                $enabled = $serviceAccount.Enabled
+                $class = $serviceAccount.ObjectClass -eq "msDS-GroupManagedServiceAccount"
+
+                if(-not $enabled){
+                    Write-Verbose "$prefixVerbose Service Account is disabled $($serviceAccount.Name)"
+                }
+                if(-not $class){
+                    Write-Verbose "$prefixVerbose Service Account is not a gMSA $($serviceAccount.Name)"
+                }
+                if($enabled -and $class){
+                    $gmsaTest = Test-ADServiceAccount -Identity $serviceAccount.Name
+                    if($gmsaTest){
+                        $validGmsa = $true
+                        Write-Info "$prefixInfo Service Account appears functional $($serviceAccount.Name)"
+                    }
+                }
+            }
+            if(-not $validGmsa){
+                Write-Info "$prefixInfo No valid gMSA found, creating"
+                $newGmsa = New-ADServiceAccount -Name $Identity -PrincipalsAllowedToRetrieveManagedPassword $Principals -SamAccountName $Identity
+                $gmsaTest = Test-ADServiceAccount -Identity Observability
+                if(-not $gmsaTest){
+                    throw "$prefixError Failed to successfully test the new gMSA $($newGmsa.Name)"
+                }
+            }
         }
         catch {
             throw $_

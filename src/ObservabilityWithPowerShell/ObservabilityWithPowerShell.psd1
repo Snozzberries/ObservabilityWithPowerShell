@@ -69,7 +69,14 @@ Description = 'Provides key foundation for using PowerShell for generating, coll
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Get-HelloWorld')
+FunctionsToExport = @(
+    'Install-Observability',
+    'Get-ObsAdds10',
+    'Get-ObsAdds100',
+    'Get-ObsAdds200',
+    'Get-ObsAdds300',
+    'Get-ObsAdds400'
+)
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

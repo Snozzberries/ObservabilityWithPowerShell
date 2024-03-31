@@ -30,6 +30,8 @@ function Install-Observability {
     #Install-EventLog
     #Install-TaskScheduler
     #Install-gMsa
-    #Install-Tasks
+    #Install-AddsObservability
+        #Install-Tasks
+    #Install-Monitor
 }
 

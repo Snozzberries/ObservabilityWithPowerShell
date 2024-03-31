@@ -1,14 +1,5 @@
-controlId,logId,category,description,governance,technical,collect,analyze
-repadminshowbackup.txt.01,100,Store & Index Object Information,The number of days since the last domain backup.,Domain backup must occur once every 3 days.,Configure backups at least 1 time per day.,
-get-adkrbtgt.json.01,200,Domain Name System & Service Lookup,The number of days since the last password change for the KRBTGT user.,Secret material must be rotated once per year.,Configure scheduled task to rotate user password once per quarter.,
-get-adconfiguration.json.16,300,Central Authentication & Authorization,The number of days until expiration of a certificate in the Enterprise RootCA Container.,Static secret material must have a validity of greater than 30 days.,Configure scheduled task to update certificates within 90 days of expiration.,
-get-gpo.json.01,400,User & Computer Configuration,The number of Group Policy Objects by Owner that are disabled without modification in the past 3 days.,Disabled resources must be deleted within 3 days if unused.,Configure scheduled task to delete objects.,
-
-
-$((Get-ADForest).Domains|%{$d=$_;(Get-ADRootDSE -Server $d).NamingContexts|%{$n=$_;(([System.DirectoryServices.ActiveDirectory.DomainController]::FindOne([System.DirectoryServices.ActiveDirectory.DirectoryContext]::new("Domain",$d))).GetReplicationMetadata($_)).Item("dsaSignature")|select {$d}, {$n}, lastOriginatingChangeTime}}|ConvertTo-Json -Compress)
-
-$((Get-ADObject -LDAPFilter "(serviceprincipalname=kadmin/changepw)" -Properties pwdLastSet|select @{n="pwdLastSet";e={[datetime]::FromFileTime($_.pwdLastSet)}}, @{n="`$d";e={"demo.com"}})|ConvertTo-Json -Compress)
-
-$(Get-ADObject -SearchBase "CN=Certification Authorities,CN=Public Key Services,CN=Services,CN=Configuration,$((Get-ADRootDSE).defaultNamingContext)" -Filter * -Properties *|select caCertificate, cn, Name, objectClass, Created, Modified|%{$o=$_;New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $_.caCertificate|select subject,issuer,thumbprint,notbefore,notafter,@{n="cn";e={$o.cn}},@{n="objectClass";e={$o.objectClass}},@{n="created";e={$o.created}},@{n="modified";e={$o.modified}},@{n="`$d";e={"demo.com"}}}|ConvertTo-Json -Compress)
-
-$(Get-GPO -All|ConvertTo-Json -Compress)
+controlId,logId,category,description,governance,technical
+repadminshowbackup.txt.01,100,Store & Index Object Information,The number of days since the last domain backup.,Domain backup must occur once every 3 days.,Configure backups at least 1 time per day.
+get-adkrbtgt.json.01,200,Domain Name System & Service Lookup,The number of days since the last password change for the KRBTGT user.,Secret material must be rotated once per year.,Configure scheduled task to rotate user password once per quarter.
+get-adconfiguration.json.16,300,Central Authentication & Authorization,The number of days until expiration of a certificate in the Enterprise RootCA Container.,Static secret material must have a validity of greater than 30 days.,Configure scheduled task to update certificates within 90 days of expiration.
+get-gpo.json.01,400,User & Computer Configuration,The number of Group Policy Objects by Owner that are disabled without modification in the past 3 days.,Disabled resources must be deleted within 3 days if unused.,Configure scheduled task to delete objects.
