@@ -42,7 +42,7 @@ function Install-ObsAdds {
                     continue
                 }
                 Write-Verbose "$prefixVerbose Installing $($command.Name)"
-                Install-Task
+                Install-Task -Command $command.Name
             }
         }
         catch {
