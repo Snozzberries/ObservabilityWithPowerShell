@@ -25,6 +25,7 @@ function Install-Task {
         [string]$LogName="ObservabilityWithPowerShell",
         [string]$Source="Observability",
         [string]$gMSA="$((Get-ADDomain).NetBIOSName)\$source`$",
+        [Parameter(Mandatory=$true)]
         [string]$Command
     )
     begin {
