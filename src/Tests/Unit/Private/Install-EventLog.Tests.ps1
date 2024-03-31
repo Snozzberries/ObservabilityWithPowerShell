@@ -18,10 +18,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Install-EventLog Private Function Tests' -Tag Unit {
         Context "When installing a new Event Log" {
-            AfterAll {
-                Remove-EventLog $logName
-            }
-
             It "Should create a new Event Log with specified name and sources" {
                 $logName = "TestLog"
                 $sources = @("Source1", "Source2")
@@ -59,10 +55,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
         }
 
         Context "When configuring an existing Event Log" {
-            AfterAll {
-                Remove-EventLog $logName
-            }
-
             It "Should configure the limits if the Event Log is new" {
                 $logName = "TestLog"
                 $size = 20MB
