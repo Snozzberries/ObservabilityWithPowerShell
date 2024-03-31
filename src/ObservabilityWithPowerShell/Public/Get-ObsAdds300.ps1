@@ -38,7 +38,7 @@ function Get-ObsAdds300 {
                     SearchBase = "$certContainer,$defaultNc"
                     LDAPFilter = "(objectClass=certificationAuthority)"
                     Properties = "*"
-                    Server = $domain
+                    Server     = $domain
                 }
                 Write-Verbose "$prefixVerbose Obtaining Root CA Objects in $domain"
                 $cas = Get-ADObject @objSplat
@@ -48,17 +48,17 @@ function Get-ObsAdds300 {
                     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $ca.caCertificate
                     
                     $obj = [PSCustomObject]@{
-                        LogId = $logId
-                        Domain = $domain
-                        Subject = $cert.Subject
-                        Issuer = $cert.Issuer
-                        Thumbprint = $cert.Thumbprint
-                        NotBefore = $cert.NotBefore
-                        NotAfter = $cert.NotAfter
-                        cn = $ca.CN
+                        LogId       = $logId
+                        Domain      = $domain
+                        Subject     = $cert.Subject
+                        Issuer      = $cert.Issuer
+                        Thumbprint  = $cert.Thumbprint
+                        NotBefore   = $cert.NotBefore
+                        NotAfter    = $cert.NotAfter
+                        cn          = $ca.CN
                         ObjectClass = $ca.ObjectClass
-                        Created = $ca.Created
-                        Modified = $ca.Modified
+                        Created     = $ca.Created
+                        Modified    = $ca.Modified
                     }
 
                     Write-Verbose "$prefixVerbose Appending object $($obj|ConvertTo-Json -Compress)"

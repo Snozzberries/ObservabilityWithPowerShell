@@ -35,9 +35,9 @@ function Get-ObsAdds100 {
                 $rootDse = Get-ADRootDSE -Server $domain
                 foreach($nc in $rootDse.NamingContexts){
                     $obj = [PSCustomObject]@{
-                        LogId = $logId
-                        Domain = $domain
-                        NamingContext = $nc
+                        LogId                     = $logId
+                        Domain                    = $domain
+                        NamingContext             = $nc
                         lastOriginatingChangeTime = $null
                     }
 

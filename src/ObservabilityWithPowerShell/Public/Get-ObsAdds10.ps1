@@ -35,7 +35,7 @@ function Get-ObsAdds10 {
                 $obj = Get-ADDomain -Server $domain
                 $selectSplat = @{
                     InputObject = $obj
-                    Property = @("DNSRoot","DistinguishedName","Name","DomainMode")
+                    Property    = @("DNSRoot","DistinguishedName","Name","DomainMode")
                 }
                 $obj = Select-Object @selectSplat
                 $obj|Add-Member -MemberType NoteProperty -Name "LogId" -Value $logId

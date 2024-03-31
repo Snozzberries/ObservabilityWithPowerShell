@@ -34,15 +34,15 @@ function Get-ObsAdds200 {
                 $objSplat = @{
                     LDAPFilter = "(serviceprincipalname=kadmin/changepw)"
                     Properties = "pwdLastSet"
-                    Server = $domain
+                    Server     = $domain
                 }
                 Write-Verbose "$prefixVerbose Obtaining KRBTGT for $domain"
                 $krbtgtObj = Get-ADObject @objSplat
                 Write-Verbose "$prefixVerbose Converting datetime stamp from $($krbtgtObj.pwdLastSet)"
                 $pwdLastSet = [datetime]::FromFileTime($krbtgtObj.pwdLastSet)
                 $obj = [PSCustomObject]@{
-                    LogId = $logId
-                    Domain = $domain
+                    LogId      = $logId
+                    Domain     = $domain
                     pwdLastSet = $pwdLastSet
                 }
                 Write-Verbose "$prefixVerbose Appending object $($obj|ConvertTo-Json -Compress)"
