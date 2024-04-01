@@ -32,7 +32,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             Mock Get-GPO {
-                param($All, $Server)
+                param($Server)
                 if ($Server -eq "DC1.domain1.com") {
                     return @(
                         [PSCustomObject]@{ DisplayName = "GPO1"; GpoId = "1" },

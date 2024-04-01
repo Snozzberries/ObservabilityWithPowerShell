@@ -25,7 +25,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             Mock Test-KdsRootKey {
-                param($KeyId)
                 return $true
             }
     
@@ -43,7 +42,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
             It "Should add a new KDS Root Key if none found" {
                 Mock Add-KdsRootKey {}
                 Mock Test-KdsRootKey {
-                    param($KeyId)
                     return $false
                 }
                 $result = { Install-KdsRootKey } | Should -PassThru

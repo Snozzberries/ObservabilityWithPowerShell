@@ -32,7 +32,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             Mock Get-ADObject {
-                param($SearchBase, $LDAPFilter, $Properties, $Server)
+                param($SearchBase, $Server)
                 if ($SearchBase -eq "CN=Certification Authorities,CN=Public Key Services,CN=Services,CN=Configuration,DC=domain1,DC=com" -and $Server -eq "domain1") {
                     return @(
                         [PSCustomObject]@{ caCertificate = [System.Text.Encoding]::UTF8.GetBytes("CertificateData1"); CN = "CA1"; ObjectClass = "certificationAuthority"; Created = (Get-Date); Modified = (Get-Date) },

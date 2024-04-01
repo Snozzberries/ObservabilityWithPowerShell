@@ -34,7 +34,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
     
             Mock Install-Task {
                 param($Command)
-                Write-Host "Installing task for command: $Command"
+                Write-Output "Installing task for command: $Command"
             }
     
             It "Should obtain commands from the Observability module" {

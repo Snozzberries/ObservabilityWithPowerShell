@@ -22,7 +22,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             Mock Get-ADObject {
-                param($LDAPFilter, $Properties, $Server)
+                param($LDAPFilter, $Server)
                 if ($LDAPFilter -eq "(serviceprincipalname=kadmin/changepw)" -and $Server -eq "domain1") {
                     return [PSCustomObject]@{ pwdLastSet = [DateTime]::ToFileTimeUtc((Get-Date)) }
                 }

@@ -32,10 +32,8 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             Mock [System.DirectoryServices.ActiveDirectory.DomainController]::FindOne {
-                param($DirectoryContext)
                 return [PSCustomObject]@{ 
                     GetReplicationMetadata = {
-                        param($NamingContext)
                         return [PSCustomObject]@{
                             Item = {
                                 param($Property)
