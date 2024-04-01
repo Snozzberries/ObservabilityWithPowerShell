@@ -48,11 +48,11 @@ function Install-KdsRootKey {
                 }
                 if($format -and $valid -and $test){
                     $validKey = $true
-                    Write-Info "$prefixInfo KDS Root Key appears functional $($key.KeyId)"
+                    Write-Output "$prefixInfo KDS Root Key appears functional $($key.KeyId)"
                 }
             }
             if(-not $validKey){
-                Write-Info "$prefixInfo No valid KDS Root Key found, adding"
+                Write-Output "$prefixInfo No valid KDS Root Key found, adding"
                 Add-KdsRootKey -EffectiveImmediately
             }
         }

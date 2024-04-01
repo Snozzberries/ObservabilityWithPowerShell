@@ -50,12 +50,12 @@ function Install-gMsa {
                     $gmsaTest = Test-ADServiceAccount -Identity $serviceAccount.Name
                     if($gmsaTest){
                         $validGmsa = $true
-                        Write-Info "$prefixInfo Service Account appears functional $($serviceAccount.Name)"
+                        Write-Output "$prefixInfo Service Account appears functional $($serviceAccount.Name)"
                     }
                 }
             }
             if(-not $validGmsa){
-                Write-Info "$prefixInfo No valid gMSA found, creating"
+                Write-Output "$prefixInfo No valid gMSA found, creating"
                 $newGmsa = New-ADServiceAccount -Name $Identity -PrincipalsAllowedToRetrieveManagedPassword $Principals -SamAccountName $Identity
                 $gmsaTest = Test-ADServiceAccount -Identity Observability
                 if(-not $gmsaTest){

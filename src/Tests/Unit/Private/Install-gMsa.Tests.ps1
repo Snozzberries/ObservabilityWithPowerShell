@@ -1,3 +1,5 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
+param()
 #-------------------------------------------------------------------------
 Set-Location -Path $PSScriptRoot
 #-------------------------------------------------------------------------
@@ -18,11 +20,21 @@ InModuleScope 'ObservabilityWithPowerShell' {
     Describe 'Install-gMsa Private Function Tests' -Tag Unit {
         BeforeAll {
             Mock Install-KdsRootKey {}
+
+            function Get-ADComputer {
+                return "computer1"
+            }
+
+            Mock Install-KdsRootKey {}
+
+            function Test-ADServiceAccount {
+                return $true
+            }
         }
 
         Context "When requesting service accounts" {
             BeforeAll {
-                Mock Get-ADServiceAccount {
+                function Get-ADServiceAccount {
                     return @(
                         [PSCustomObject]@{ Name = "Observability"; Enabled = $true; ObjectClass = "msDS-GroupManagedServiceAccount" }
                     )
@@ -35,33 +47,34 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
 
             It "Should detect functional service accounts" {
-                BeforeAll {
-                    Mock Test-ADServiceAccount {
-                        return $true
-                    }
-                }
-                $result = { Install-gMsa -Identity "Observability" } | Should -PassThru
-                $result | Should -Contain "Service Account appears functional Observability"
+                $result = Install-gMsa -Identity "Observability"
+                $result | Should -BeLike "*Service Account appears functional*"
                 Assert-VerifiableMock
+            }
+        }
+
+        Context "Create gMSAs" {
+            BeforeAll {
+                function New-ADServiceAccount {
+                    return [PSCustomObject]@{ Name = "Unknown" }
+                }
+
+                function Get-ADServiceAccount {
+                    return @()
+                }
             }
 
             It "Should create a new gMSA if none found" {
-                BeforeAll {
-                    Mock New-ADServiceAccount {
-                        return [PSCustomObject]@{ Name = "Observability" }
-                    }
-                    Mock Test-ADServiceAccount {
-                        return $true
-                    }
-                }
-                $result = { Install-gMsa -Identity "Observability" } | Should -PassThru
-                $result | Should -Contain "No valid gMSA found, creating"
+                $result = Install-gMsa -Identity "Unknown"
+                $result | Should -BeLike "*No valid gMSA found, creating*"
                 Assert-VerifiableMock
             }
+        }
 
+        Context "Fail to create gMSA" {
             It "Should throw an error if new gMSA creation fails" {
                 BeforeAll {
-                    Mock New-ADServiceAccount {
+                    function New-ADServiceAccount {
                         throw "Failed to create gMSA"
                     }
                 }

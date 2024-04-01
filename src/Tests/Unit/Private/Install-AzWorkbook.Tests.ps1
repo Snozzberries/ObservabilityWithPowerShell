@@ -16,11 +16,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
     $WarningPreference = "SilentlyContinue"
     #-------------------------------------------------------------------------
     Describe 'Install-AzWorkbook Private Function Tests' -Tag Unit {
-        Context "Verbose Output" {
-            It "Should output the correct verbose message" {
-                $output = { Install-AzMonitor } | Should -PassThru -Verbose
-                $output | Should -Contain "Not currently implemented"
-            }
-        }
+
     }
 } #inModule

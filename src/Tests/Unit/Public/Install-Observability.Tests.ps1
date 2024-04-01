@@ -22,7 +22,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
                 Mock Install-TaskScheduler {}
                 Mock Install-gMsa {}
                 Mock Install-ObsAdds {}
-                Mock Install-Monitor {}
+                Mock Install-AzMonitor {}
             }
         
             It "Should execute all installation steps" {
@@ -50,9 +50,9 @@ InModuleScope 'ObservabilityWithPowerShell' {
                 Assert-MockCalled Install-ObsAdds -Exactly 1 -Scope It
             }
     
-            It "Should call Install-Monitor" {
+            It "Should call Install-AzMonitor" {
                 Install-Observability
-                Assert-MockCalled Install-Monitor -Exactly 1 -Scope It
+                Assert-MockCalled Install-AzMonitor -Exactly 1 -Scope It
             }
         }
     }
