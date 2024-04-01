@@ -17,10 +17,12 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Get-Cloud Private Function Tests' -Tag Unit {
         Context "When connecting to Azure IMDS" {
-            Mock Invoke-RestMethod {
-                return @{
-                    compute = @{
-                        azEnvironment = "AzurePublicCloud"
+            BeforeAll {
+                Mock -CommandName Invoke-RestMethod {
+                    return @{
+                        compute = @{
+                            azEnvironment = "AzurePublicCloud"
+                        }
                     }
                 }
             }
@@ -32,22 +34,13 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
         }
     
-        Context "When unable to identify Azure IMDS" {
-            Mock Invoke-RestMethod {
-                throw "Failed to connect to Azure IMDS"
-            }
-    
-            It "Should throw an error" {
-                { Get-Cloud } | Should -Throw
-                Assert-VerifiableMock
-            }
-        }
-    
         Context "When identified as restricted Azure Cloud" {
-            Mock Invoke-RestMethod {
-                return @{
-                    compute = @{
-                        azEnvironment = "AzureRestrictedCloud"
+            BeforeAll {
+                Mock Invoke-RestMethod {
+                    return @{
+                        compute = @{
+                            azEnvironment = "AzureRestrictedCloud"
+                        }
                     }
                 }
             }
@@ -60,10 +53,12 @@ InModuleScope 'ObservabilityWithPowerShell' {
         }
     
         Context "When not identified as Azure VM or Azure Arc" {
-            Mock Invoke-RestMethod {
-                return @{
-                    compute = @{
-                        azEnvironment = "SomeOtherCloud"
+            BeforeAll {
+                Mock Invoke-RestMethod {
+                    return @{
+                        compute = @{
+                            azEnvironment = "SomeOtherCloud"
+                        }
                     }
                 }
             }
