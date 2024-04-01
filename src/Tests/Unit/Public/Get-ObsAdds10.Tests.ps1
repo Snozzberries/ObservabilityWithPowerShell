@@ -18,12 +18,11 @@ InModuleScope 'ObservabilityWithPowerShell' {
     Describe 'Get-ObsAdds10 Public Function Tests' -Tag Unit {
         Context "When obtaining domain details" {
             BeforeAll {
-                Mock Get-ADForest {
+                Mock -CommandName Get-ADForest {
                     return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
                 }
                 
-        
-                Mock Get-ADDomain {
+                Mock -CommandName Get-ADDomain {
                     param($Server)
                     if ($Server -eq "domain1") {
                         return [PSCustomObject]@{ DNSRoot = "domain1.com"; DistinguishedName = "DC=domain1,DC=com"; Name = "domain1"; DomainMode = "Windows2008Domain" }

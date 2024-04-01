@@ -31,6 +31,6 @@ function Install-Observability {
     Install-TaskScheduler
     Install-gMsa
     Install-ObsAdds
-    Install-Monitor
+    Install-AzMonitor
 }
 
