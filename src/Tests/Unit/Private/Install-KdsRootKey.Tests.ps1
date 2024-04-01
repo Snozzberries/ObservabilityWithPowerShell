@@ -17,15 +17,17 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Install-KdsRootKey Private Function Tests' -Tag Unit {
         Context "When requesting KDS Root Keys" {
-            Mock Get-KdsRootKey {
-                return @(
-                    [PSCustomObject]@{ KeyId = "Key1"; IsFormatValid = $true; EffectiveTime = (Get-Date).AddDays(-1) },
-                    [PSCustomObject]@{ KeyId = "Key2"; IsFormatValid = $true; EffectiveTime = (Get-Date).AddDays(1) }
-                )
-            }
-    
-            Mock Test-KdsRootKey {
-                return $true
+            BeforeAll {
+                Mock Get-KdsRootKey {
+                    return @(
+                        [PSCustomObject]@{ KeyId = "Key1"; IsFormatValid = $true; EffectiveTime = (Get-Date).AddDays(-1) },
+                        [PSCustomObject]@{ KeyId = "Key2"; IsFormatValid = $true; EffectiveTime = (Get-Date).AddDays(1) }
+                    )
+                }
+        
+                Mock Test-KdsRootKey {
+                    return $true
+                }
             }
     
             It "Should request KDS Root Keys" {
@@ -40,9 +42,11 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             It "Should add a new KDS Root Key if none found" {
-                Mock Add-KdsRootKey {}
-                Mock Test-KdsRootKey {
-                    return $false
+                BeforeAll {
+                    Mock Add-KdsRootKey {}
+                    Mock Test-KdsRootKey {
+                        return $false
+                    }
                 }
                 $result = { Install-KdsRootKey } | Should -PassThru
                 $result | Should -Contain "No valid KDS Root Key found, adding"
@@ -50,8 +54,10 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             It "Should throw an error if adding a new KDS Root Key fails" {
-                Mock Add-KdsRootKey {
-                    throw "Failed to add KDS Root Key"
+                BeforeAll {
+                    Mock Add-KdsRootKey {
+                        throw "Failed to add KDS Root Key"
+                    }
                 }
                 { Install-KdsRootKey } | Should -Throw
                 Assert-VerifiableMock

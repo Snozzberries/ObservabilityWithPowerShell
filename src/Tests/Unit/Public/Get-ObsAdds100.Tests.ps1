@@ -17,28 +17,30 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Get-ObsAdds100 Public Function Tests' -Tag Unit {
         Context "When obtaining RootDSE entry and replication data" {
-            Mock Get-ADForest {
-                return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
-            }
-    
-            Mock Get-ADRootDSE {
-                param($Server)
-                if ($Server -eq "domain1") {
-                    return [PSCustomObject]@{ NamingContexts = @("DC=domain1,DC=com", "CN=Configuration,DC=domain1,DC=com") }
+            BeforeAll {
+                Mock Get-ADForest {
+                    return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
                 }
-                elseif ($Server -eq "domain2") {
-                    return [PSCustomObject]@{ NamingContexts = @("DC=domain2,DC=com", "CN=Configuration,DC=domain2,DC=com") }
+        
+                Mock Get-ADRootDSE {
+                    param($Server)
+                    if ($Server -eq "domain1") {
+                        return [PSCustomObject]@{ NamingContexts = @("DC=domain1,DC=com", "CN=Configuration,DC=domain1,DC=com") }
+                    }
+                    elseif ($Server -eq "domain2") {
+                        return [PSCustomObject]@{ NamingContexts = @("DC=domain2,DC=com", "CN=Configuration,DC=domain2,DC=com") }
+                    }
                 }
-            }
-    
-            Mock [System.DirectoryServices.ActiveDirectory.DomainController]::FindOne {
-                return [PSCustomObject]@{ 
-                    GetReplicationMetadata = {
-                        return [PSCustomObject]@{
-                            Item = {
-                                param($Property)
-                                if ($Property -eq "dsaSignature") {
-                                    return [PSCustomObject]@{ lastOriginatingChangeTime = Get-Date }
+        
+                Mock [System.DirectoryServices.ActiveDirectory.DomainController]::FindOne {
+                    return [PSCustomObject]@{ 
+                        GetReplicationMetadata = {
+                            return [PSCustomObject]@{
+                                Item = {
+                                    param($Property)
+                                    if ($Property -eq "dsaSignature") {
+                                        return [PSCustomObject]@{ lastOriginatingChangeTime = Get-Date }
+                                    }
                                 }
                             }
                         }

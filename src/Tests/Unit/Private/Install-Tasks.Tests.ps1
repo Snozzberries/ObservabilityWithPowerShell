@@ -18,21 +18,23 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Install-Tasks Private Function Tests' -Tag Unit {
         Context "When installing task" {
-            Mock Get-ADDomain {
-                return [PSCustomObject]@{ NetBIOSName = "TestDomain" }
+            BeforeAll {
+                Mock Get-ADDomain {
+                    return [PSCustomObject]@{ NetBIOSName = "TestDomain" }
+                }
+        
+                Mock Get-Command {
+                    return [PSCustomObject]@{ Source = "powershell.exe" }
+                }
+        
+                Mock New-ScheduledTaskAction {}
+                Mock New-ScheduledTaskTrigger {}
+                Mock New-ScheduledTaskPrincipal {}
+                Mock New-ScheduledTaskSettingsSet {}
+                Mock New-ScheduledTask {}
+                Mock Register-ScheduledTask {}
             }
-    
-            Mock Get-Command {
-                return [PSCustomObject]@{ Source = "powershell.exe" }
-            }
-    
-            Mock New-ScheduledTaskAction {}
-            Mock New-ScheduledTaskTrigger {}
-            Mock New-ScheduledTaskPrincipal {}
-            Mock New-ScheduledTaskSettingsSet {}
-            Mock New-ScheduledTask {}
-            Mock Register-ScheduledTask {}
-    
+        
             It "Should attempt to match the provided command" {
                 { Install-Task -Command "Get-ObsAdds1" } | Should -Not -Throw
                 Assert-VerifiableMock

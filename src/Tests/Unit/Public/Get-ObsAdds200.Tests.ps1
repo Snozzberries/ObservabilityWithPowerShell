@@ -17,17 +17,19 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Get-ObsAdds200 Public Function Tests' -Tag Unit {
         Context "When obtaining KRBTGT object details" {
-            Mock Get-ADForest {
-                return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
-            }
-    
-            Mock Get-ADObject {
-                param($LDAPFilter, $Server)
-                if ($LDAPFilter -eq "(serviceprincipalname=kadmin/changepw)" -and $Server -eq "domain1") {
-                    return [PSCustomObject]@{ pwdLastSet = [DateTime]::ToFileTimeUtc((Get-Date)) }
+            BeforeAll {
+                Mock Get-ADForest {
+                    return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
                 }
-                elseif ($LDAPFilter -eq "(serviceprincipalname=kadmin/changepw)" -and $Server -eq "domain2") {
-                    return [PSCustomObject]@{ pwdLastSet = [DateTime]::ToFileTimeUtc((Get-Date).AddDays(-1)) }
+        
+                Mock Get-ADObject {
+                    param($LDAPFilter, $Server)
+                    if ($LDAPFilter -eq "(serviceprincipalname=kadmin/changepw)" -and $Server -eq "domain1") {
+                        return [PSCustomObject]@{ pwdLastSet = [DateTime]::ToFileTimeUtc((Get-Date)) }
+                    }
+                    elseif ($LDAPFilter -eq "(serviceprincipalname=kadmin/changepw)" -and $Server -eq "domain2") {
+                        return [PSCustomObject]@{ pwdLastSet = [DateTime]::ToFileTimeUtc((Get-Date).AddDays(-1)) }
+                    }
                 }
             }
     

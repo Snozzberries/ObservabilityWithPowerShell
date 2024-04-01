@@ -16,13 +16,17 @@ InModuleScope 'ObservabilityWithPowerShell' {
     $WarningPreference = "SilentlyContinue"
     #-------------------------------------------------------------------------
     Describe 'Install-gMsa Private Function Tests' -Tag Unit {
-        Mock Install-KdsRootKey {}
+        BeforeAll {
+            Mock Install-KdsRootKey {}
+        }
 
         Context "When requesting service accounts" {
-            Mock Get-ADServiceAccount {
-                return @(
-                    [PSCustomObject]@{ Name = "Observability"; Enabled = $true; ObjectClass = "msDS-GroupManagedServiceAccount" }
-                )
+            BeforeAll {
+                Mock Get-ADServiceAccount {
+                    return @(
+                        [PSCustomObject]@{ Name = "Observability"; Enabled = $true; ObjectClass = "msDS-GroupManagedServiceAccount" }
+                    )
+                }
             }
 
             It "Should request service accounts with the specified identity" {
@@ -31,8 +35,10 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
 
             It "Should detect functional service accounts" {
-                Mock Test-ADServiceAccount {
-                    return $true
+                BeforeAll {
+                    Mock Test-ADServiceAccount {
+                        return $true
+                    }
                 }
                 $result = { Install-gMsa -Identity "Observability" } | Should -PassThru
                 $result | Should -Contain "Service Account appears functional Observability"
@@ -40,11 +46,13 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
 
             It "Should create a new gMSA if none found" {
-                Mock New-ADServiceAccount {
-                    return [PSCustomObject]@{ Name = "Observability" }
-                }
-                Mock Test-ADServiceAccount {
-                    return $true
+                BeforeAll {
+                    Mock New-ADServiceAccount {
+                        return [PSCustomObject]@{ Name = "Observability" }
+                    }
+                    Mock Test-ADServiceAccount {
+                        return $true
+                    }
                 }
                 $result = { Install-gMsa -Identity "Observability" } | Should -PassThru
                 $result | Should -Contain "No valid gMSA found, creating"
@@ -52,8 +60,10 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
 
             It "Should throw an error if new gMSA creation fails" {
-                Mock New-ADServiceAccount {
-                    throw "Failed to create gMSA"
+                BeforeAll {
+                    Mock New-ADServiceAccount {
+                        throw "Failed to create gMSA"
+                    }
                 }
                 { Install-gMsa -Identity "Observability" } | Should -Throw
                 Assert-VerifiableMock

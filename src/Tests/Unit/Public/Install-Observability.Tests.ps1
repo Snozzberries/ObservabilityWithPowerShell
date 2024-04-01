@@ -17,12 +17,14 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Install-Observability Public Function Tests' -Tag Unit {
         Context "When executing Install-Observability" {
-            Mock Install-EventLog {}
-            Mock Install-TaskScheduler {}
-            Mock Install-gMsa {}
-            Mock Install-ObsAdds {}
-            Mock Install-Monitor {}
-    
+            BeforeAll {
+                Mock Install-EventLog {}
+                Mock Install-TaskScheduler {}
+                Mock Install-gMsa {}
+                Mock Install-ObsAdds {}
+                Mock Install-Monitor {}
+            }
+        
             It "Should execute all installation steps" {
                 { Install-Observability } | Should -Not -Throw
                 Assert-VerifiableMock

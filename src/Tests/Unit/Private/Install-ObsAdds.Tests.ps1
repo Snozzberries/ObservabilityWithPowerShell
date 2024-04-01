@@ -17,24 +17,26 @@ InModuleScope 'ObservabilityWithPowerShell' {
     #-------------------------------------------------------------------------
     Describe 'Install-ObsAdds Private Function Tests' -Tag Unit {
         Context "When installing Observability commands" {
-            Mock Get-Command {
-                return @(
-                    [PSCustomObject]@{ Name = "Get-ObsAdds1"; CommandType = "Function" },
-                    [PSCustomObject]@{ Name = "Get-ObsAdds2"; CommandType = "Function" },
-                    [PSCustomObject]@{ Name = "Not-RelatedCommand"; CommandType = "Function" }
-                )
-            }
-    
-            Mock Get-ScheduledTask {
-                return @(
-                    [PSCustomObject]@{ TaskName = "Get-ObsAdds1" },
-                    [PSCustomObject]@{ TaskName = "AnotherTask" }
-                )
-            }
-    
-            Mock Install-Task {
-                param($Command)
-                Write-Output "Installing task for command: $Command"
+            BeforeAll {
+                Mock Get-Command {
+                    return @(
+                        [PSCustomObject]@{ Name = "Get-ObsAdds1"; CommandType = "Function" },
+                        [PSCustomObject]@{ Name = "Get-ObsAdds2"; CommandType = "Function" },
+                        [PSCustomObject]@{ Name = "Not-RelatedCommand"; CommandType = "Function" }
+                    )
+                }
+        
+                Mock Get-ScheduledTask {
+                    return @(
+                        [PSCustomObject]@{ TaskName = "Get-ObsAdds1" },
+                        [PSCustomObject]@{ TaskName = "AnotherTask" }
+                    )
+                }
+        
+                Mock Install-Task {
+                    param($Command)
+                    Write-Output "Installing task for command: $Command"
+                }
             }
     
             It "Should obtain commands from the Observability module" {
@@ -53,16 +55,20 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
     
             It "Should skip commands not matching the pattern" {
-                Mock Install-Task {
-                    throw "Install-Task should not be called for non-matching command"
+                BeforeAll {
+                    Mock Install-Task {
+                        throw "Install-Task should not be called for non-matching command"
+                    }
                 }
                 { Install-ObsAdds } | Should -Not -Throw
                 Assert-VerifiableMock
             }
     
             It "Should skip commands already existing as tasks" {
-                Mock Install-Task {
-                    throw "Install-Task should not be called for existing task"
+                BeforeAll {
+                    Mock Install-Task {
+                        throw "Install-Task should not be called for existing task"
+                    }
                 }
                 { Install-ObsAdds } | Should -Not -Throw
                 Assert-VerifiableMock
