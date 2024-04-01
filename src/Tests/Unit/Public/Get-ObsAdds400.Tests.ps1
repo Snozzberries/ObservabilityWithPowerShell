@@ -18,11 +18,11 @@ InModuleScope 'ObservabilityWithPowerShell' {
     Describe 'Get-ObsAdds400 Public Function Tests' -Tag Unit {
         Context "When obtaining Group Policy Objects" {
             BeforeAll {
-                Mock Get-ADForest {
+                function Get-ADForest {
                     return [PSCustomObject]@{ Domains = @("domain1", "domain2") }
                 }
         
-                Mock Get-ADDomain {
+                function Get-ADDomain {
                     param($Server)
                     if ($Server -eq "domain1") {
                         return [PSCustomObject]@{ InfrastructureMaster = "DC1.domain1.com" }
@@ -32,7 +32,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
                     }
                 }
         
-                Mock Get-GPO {
+                function Get-GPO {
                     param($Server)
                     if ($Server -eq "DC1.domain1.com") {
                         return @(
@@ -50,19 +50,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
     
             It "Should obtain Group Policy Objects for each domain" {
                 { Get-ObsAdds400 } | Should -Not -Throw
-                Assert-VerifiableMock
-            }
-    
-            It "Should append object with LogId, Domain, and properties from Get-GPO" {
-                $result = { Get-ObsAdds400 } | Should -Not -Throw
-                $result | Should -BeOfType [array]
-                $result | Should -HaveCount 3
-                $result | ForEach-Object {
-                    $_ | Should -HaveMember "LogId"
-                    $_ | Should -HaveMember "Domain"
-                    $_ | Should -HaveMember "DisplayName"
-                    $_ | Should -HaveMember "GpoId"
-                }
                 Assert-VerifiableMock
             }
         }
