@@ -20,6 +20,7 @@
 #>
 function Install-ObsAdds {
     [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', 'Get-ObsAdds')]
     param (
         [string]$Source="Observability"
     )
