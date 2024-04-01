@@ -29,7 +29,9 @@ function Get-Cloud {
             $azure = $false
             $imdsSplat = @{
                 Uri        = "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
-                Headers    = @{"Metadata"="true"}
+                Headers    = @{
+                    "Metadata" = "true"
+                }
                 Method     = "GET"
                 TimeoutSec = 3
             }
@@ -39,11 +41,13 @@ function Get-Cloud {
                 Write-Verbose "$prefixVerbose Successfully identified as Azure Commercial Cloud"
                 $azure = $true
                 return $azure
-            }elseif($imds.compute.azEnvironment -like "Azure*"){
+            }
+            elseif($imds.compute.azEnvironment -like "Azure*"){
                 Write-Verbose "$prefixVerbose Identified as a restricted Azure Cloud"
                 $azure = $true
                 return $azure
-            }else{
+            }
+            else{
                 Write-Verbose "$prefixVerbose Unable to identify as an Azure VM attempting Azure Arc install"
                 return $azure
             }
