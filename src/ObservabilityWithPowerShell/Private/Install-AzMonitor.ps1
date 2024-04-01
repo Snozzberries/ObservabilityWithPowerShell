@@ -46,6 +46,13 @@ function Install-AzMonitor {
             #Requires -Modules Az.Accounts
             #Connect-AzAccount -DeviceCode
 
+            #Check for Sub
+            #Check for RG or create
+            #Check for LAW or create
+            ##Check for Data Collection Rule with data source "ObservabilityWithPowerShell!*" or create
+            ###Check for resource in DCR or add
+            ##Check for Workbook or call Install-AzWorkbook
+
             Search-AzGraph
             resources
             | where resourceGroup in~ ("RG-ComputeModernOperations")
