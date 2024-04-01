@@ -20,21 +20,9 @@
 #>
 function Install-AzWorkbook {
     [CmdletBinding()]
-    param (
-        [string]$FolderName="ObservabilityWithPowerShell",
-        [string]$LogName="ObservabilityWithPowerShell",
-        [string]$Source="Observability"
-    )
+    param ()
     begin {
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
-        $prefixInfo = "[Info][$($MyInvocation.MyCommand.Name)]"
-
-        $log = @{
-            LogName   = $LogName
-            EntryType = "Information"
-            Source    = $source
-            Category  = 0
-        }
     }
     process {
         try {

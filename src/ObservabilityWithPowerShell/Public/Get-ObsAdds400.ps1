@@ -38,7 +38,7 @@ function Get-ObsAdds400 {
                 $gpos|Add-Member -MemberType NoteProperty -Name "LogId" -Value $logId
                 $gpos|Add-Member -MemberType NoteProperty -Name "Domain" -Value $domain
                 Write-Verbose "$prefixVerbose Appending $($gpos.Count) objects $($obj|ConvertTo-Json -Compress)"
-                $objs += $gpos|select *
+                $objs += $gpos|Select-Object *
             }
             Write-Verbose "$prefixVerbose Returing $($objs.Count) objects"
             return $objs
