@@ -27,11 +27,10 @@ function Install-Observability {
         # [ValidateNotNullOrEmpty()]
         # [string]$YourParameter
     )
-    #Install-EventLog
-    #Install-TaskScheduler
-    #Install-gMsa
-    #Install-ObsAdds
-    ##Install-Tasks
-    #Install-Monitor
+    Install-EventLog
+    Install-TaskScheduler
+    Install-gMsa
+    Install-ObsAdds
+    Install-Monitor
 }
 
