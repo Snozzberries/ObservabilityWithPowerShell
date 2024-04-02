@@ -11,7 +11,22 @@ Locale: en-US
 Provides key foundation for using PowerShell for generating, collecting, and aggregating metrics, events, logs, and telemetry for observability purposes.
 
 ## ObservabilityWithPowerShell Cmdlets
-### [Get-HelloWorld](Get-HelloWorld.md)
+### [Get-ObsAdds10](Get-ObsAdds10.md)
+Short description
+
+### [Get-ObsAdds100](Get-ObsAdds100.md)
+Short description
+
+### [Get-ObsAdds200](Get-ObsAdds200.md)
+Short description
+
+### [Get-ObsAdds300](Get-ObsAdds300.md)
+Short description
+
+### [Get-ObsAdds400](Get-ObsAdds400.md)
+Short description
+
+### [Install-Observability](Install-Observability.md)
 Short description
 
 
