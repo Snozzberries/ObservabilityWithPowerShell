@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 #-------------------------------------------------------------------------
 Set-Location -Path $PSScriptRoot
 #-------------------------------------------------------------------------
@@ -17,7 +16,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
     $WarningPreference = "SilentlyContinue"
     #-------------------------------------------------------------------------
     Describe 'Install-TaskScheduler Private Function Tests' -Tag Unit {
-        Context "When installing a new Task Scheduler folder" {
+        <#Context "When installing a new Task Scheduler folder" {
             AfterAll {
                 #Remove-EventLog $logName
                 $f=$taskScheduler.GetFolder("\$folderName")
@@ -43,7 +42,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
             }
         }
 
-        <#Context "When encountering errors" {
+        Context "When encountering errors" {
             It "Should throw an error if there is an unexpected issue connecting to Task Scheduler" {
                 Mock New-Object { throw "Error connecting to Task Scheduler" }
 

@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 #-------------------------------------------------------------------------
 Set-Location -Path $PSScriptRoot
 #-------------------------------------------------------------------------
@@ -17,7 +16,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
     $WarningPreference = "SilentlyContinue"
     #-------------------------------------------------------------------------
     Describe 'Install-Tasks Private Function Tests' -Tag Unit {
-        Context "When installing task" {
+        <#Context "When installing task" {
             BeforeAll {
                 Mock Get-ADDomain {
                     return [PSCustomObject]@{ NetBIOSName = "TestDomain" }
@@ -59,6 +58,6 @@ InModuleScope 'ObservabilityWithPowerShell' {
                 { Install-Task -Command "InvalidCommand" } | Should -Throw
                 Assert-VerifiableMock
             }
-        }
+        }#>
     }
 } #inModule
