@@ -28,7 +28,6 @@ function Install-EventLog {
         [bool]$ContinueOnNewSources=$true
     )
     begin {
-        $prefixError = "[Error][$($MyInvocation.MyCommand.Name)]"
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
         $prefixInfo = "[Info][$($MyInvocation.MyCommand.Name)]"
     }
@@ -58,7 +57,7 @@ function Install-EventLog {
 
             if ($overlap -and $Sources.Count -eq 0) {
                 Write-Verbose "$prefixVerbose Found existing event sources, exiting function"
-                Write-Error "$prefixError $($overlap.count) Log Sources already exist in the $LogName log"
+                Write-Warning "$prefixWarning $($overlap.count) Log Sources already exist in the $LogName log"
                 return
             }
         }
