@@ -22,8 +22,7 @@ function Install-ObsAdds {
     [CmdletBinding()]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
-        [string]$FolderName="ObservabilityWithPowerShell",
-        [string]$Source="Observability"
+        [string]$FolderName="ObservabilityWithPowerShell"
     )
     begin {
         $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
