@@ -22,6 +22,7 @@ function Install-ObsAdds {
     [CmdletBinding()]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param (
+        [string]$FolderName="ObservabilityWithPowerShell",
         [string]$Source="Observability"
     )
     begin {
@@ -32,7 +33,7 @@ function Install-ObsAdds {
             Write-Verbose "$prefixVerbose Obtaining commands from module"
             $commands = Get-Command -Module ObservabilityWithPowerShell
             Write-Verbose "$prefixVerbose Obtaining scheduled tasks"
-            $tasks = Get-ScheduledTask -TaskPath "\$Source"
+            $tasks = Get-ScheduledTask -TaskPath "\$FolderName\"
             foreach($command in $commands){
                 if($command.Name -notmatch "Get-ObsAdds[0-9]+"){
                     Write-Verbose "$prefixVerbose Command does not match pattern, skipping $($command.Name)"
