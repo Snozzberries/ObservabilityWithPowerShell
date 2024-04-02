@@ -11,6 +11,8 @@
     Another example of how to use this cmdlet
 .PARAMETER InputObject
     Specifies the object to be processed.  You can also pipe the objects to this command.
+.PARAMETER Domains
+    Supply array strings, each as an AD DS Domain. Default value will use Get-ADForest to dicovery domains.
 .OUTPUTS
     Output from this cmdlet (if any)
 .NOTES
