@@ -2,7 +2,7 @@
 Module Name: ObservabilityWithPowerShell
 Module Guid: 19843c0a-30dd-454e-824f-d0eb417b12f1
 Download Help Link: NA
-Help Version: 0.0.2
+Help Version: 0.0.3
 Locale: en-US
 ---
 
