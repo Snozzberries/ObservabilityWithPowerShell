@@ -55,6 +55,7 @@ function Install-gMsa {
                 }
             }
             if(-not $validGmsa){
+                #What if account exists but is disabled?
                 Write-Output "$prefixInfo No valid gMSA found, creating"
                 $newGmsa = New-ADServiceAccount -Name $Identity -PrincipalsAllowedToRetrieveManagedPassword $Principals -SamAccountName $Identity
                 $gmsaTest = Test-ADServiceAccount -Identity Observability

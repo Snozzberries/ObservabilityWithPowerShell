@@ -12,7 +12,7 @@
 RootModule = 'ObservabilityWithPowerShell.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.2'
+ModuleVersion = '0.0.3'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -51,7 +51,7 @@ Description = 'Provides key foundation for using PowerShell for generating, coll
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @("ActiveDirectory")
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
