@@ -29,6 +29,13 @@ function Install-Observability {
     )
     Install-EventLog
     Install-TaskScheduler
+    if(-not(Get-Module -name "ActiveDirectory")){
+        if(Get-Module -ListAvailable|Where-Object {$_.name -eq "ActiveDirectory"}){
+            Import-Module -Name "ActiveDirectory"
+        }else{
+            throw "[Error] Unable to load dependency module ActiveDirectory"
+        }
+    }
     Install-gMsa
     Install-ObsAdds
     Install-AzMonitor
