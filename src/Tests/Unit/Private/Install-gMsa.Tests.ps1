@@ -62,6 +62,7 @@ InModuleScope 'ObservabilityWithPowerShell' {
                 function Get-ADServiceAccount {
                     return @()
                 }
+                function Get-ADDomain {}
             }
 
             It "Should create a new gMSA if none found" {

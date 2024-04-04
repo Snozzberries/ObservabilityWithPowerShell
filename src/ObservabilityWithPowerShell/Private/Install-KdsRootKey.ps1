@@ -53,7 +53,7 @@ function Install-KdsRootKey {
             }
             if(-not $validKey){
                 Write-Output "$prefixInfo No valid KDS Root Key found, adding"
-                Add-KdsRootKey -EffectiveImmediately
+                Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-4))
             }
         }
         catch {
