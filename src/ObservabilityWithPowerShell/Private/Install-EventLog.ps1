@@ -57,7 +57,7 @@ function Install-EventLog {
 
             if ($overlap -and $Sources.Count -eq 0) {
                 Write-Verbose "$prefixVerbose Found existing event sources, exiting function"
-                Write-Warning "$prefixWarning $($overlap.count) Log Sources already exist in the $LogName log"
+                Write-Output "$prefixInfo $($overlap.count) Log Sources already exist in the $LogName log"
                 return
             }
         }

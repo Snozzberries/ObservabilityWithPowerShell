@@ -45,7 +45,7 @@ function Install-TaskScheduler {
             Write-Verbose "$prefixVerbose Checking for '$FolderName'"
             $scheduleObject.GetFolder("\$FolderName")|Out-Null
 
-            Write-Warning "$prefixInfo '$FolderName' already exists, no work needed"
+            Write-Output "$prefixInfo '$FolderName' already exists, no work needed"
             Write-EventLog @log -EventId 20 -Message "$prefixInfo '$FolderName' already exists"
         }
         Catch [System.IO.FileNotFoundException] {
