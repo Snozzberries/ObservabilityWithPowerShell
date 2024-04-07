@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Supports initial installation of all components to generate synthetic events.
+    TODO
 .DESCRIPTION
     Long description
 .EXAMPLE
@@ -28,10 +28,8 @@ function Install-Observability {
         # [string]$YourParameter
     )
     $prefixVerbose = "[Verbose][$($MyInvocation.MyCommand.Name)]"
-    Write-Verbose "$prefixVerbose Calling [Install-EventLog]"
-    Install-EventLog
-    Write-Verbose "$prefixVerbose Calling [Install-TaskScheduler]"
-    Install-TaskScheduler
+    Write-Verbose "$prefixVerbose Delete Event Log"
+    Write-Verbose "$prefixVerbose Delete Tasks and Folder"
     Write-Verbose "$prefixVerbose Validating module dependency"
     if(-not(Get-Module -Name "ActiveDirectory" -Verbose:$false)){
         if(Get-Module -ListAvailable -Verbose:$false|Where-Object {$_.name -eq "ActiveDirectory"}){
@@ -41,11 +39,7 @@ function Install-Observability {
             throw "[Error] Unable to load dependency module ActiveDirectory"
         }
     }
-    Write-Verbose "$prefixVerbose Calling [Install-gMsa]"
-    Install-gMsa
-    Write-Verbose "$prefixVerbose Calling [Install-ObsAdds]"
-    Install-ObsAdds
-    Write-Verbose "$prefixVerbose Calling [Install-AzMonitor]"
-    Install-AzMonitor
+    Write-Verbose "$prefixVerbose Delete gMSA"
+    Write-Verbose "$prefixVerbose Delete LAW, RG"
 }
 

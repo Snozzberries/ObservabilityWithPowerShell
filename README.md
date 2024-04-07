@@ -1,28 +1,22 @@
 # ObservabilityWithPowerShell
 
-## Synopsis
-
-<!-- Enter a synopsis -->
-
 ## Description
 
-<!-- Enter a description -->
-
-## Why
-
-<!-- Short reason you created the project -->
+ObservabilityWithPowerShell provides a quick way to get started with observability and monitoring of synthetic events and other measures.
 
 ## Getting Started
 
 ### Prerequisites
 
-<!-- list any prerequisites -->
+- Windows Server Operating System
+- Joined to Active Directory Domain Services Domain
+  - Supporting gMSAs
+- ActiveDirectory module
 
 ### Installation
 
 ```powershell
-# how to install ObservabilityWithPowerShell
-
+Install-Observability
 ```
 
 ### Quick start
@@ -30,8 +24,15 @@
 #### Example1
 
 ```powershell
-# command showing how to use your project
+Install-Observability -Verbose
+```
 
+#### Example2
+
+Test synthetics
+
+```powershell
+Get-ObsAdds10
 ```
 
 ## Author
